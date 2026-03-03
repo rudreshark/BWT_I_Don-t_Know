@@ -6,7 +6,7 @@ AI-Based Insider Threat Detection Using Behavioral Drift
 
 ---
 
-Overview
+### Overview
 
 SKÖLL is an AI-powered insider threat detection system designed to identify malicious intent before data exfiltration occurs.
 It continuously monitors user behavior, detects behavioral drift, and triggers automated security responses in real time.
@@ -16,7 +16,7 @@ The system is built for high-security environments and aligns with the Digital P
 
 ---
 
-Problem
+### Problem
 
 Insider threats are:
 
@@ -33,7 +33,7 @@ Under the DPDP Act 2026, delayed detection leads to legal, financial, and reputa
 
 ---
 
-Solution
+### Solution
 
 SKÖLL introduces predictive insider threat detection by:
 
@@ -49,7 +49,7 @@ This enables organizations to detect intent, not just violations.
 
 ---
 
-Core Innovation
+### Core Innovation
 
 Behavioral Drift Detection Engine
 
@@ -67,7 +67,7 @@ This approach detects low-and-slow insider attacks that evade traditional securi
 
 ---
 
-System Architecture
+### System Architecture
 
 User Activity Logs
         ↓
@@ -82,7 +82,7 @@ Automated Kill-Switch & Audit Logs
 
 ---
 
-Automated Kill-Switch
+### Automated Kill-Switch
 
 When behavioral drift exceeds a defined risk threshold:
 
@@ -98,7 +98,7 @@ Incident is logged for compliance review
 
 ---
 
-Trust Score
+### Trust Score
 
 Each session receives a Trust Score (0–100) based on:
 
@@ -109,17 +109,17 @@ Drift intensity
 Historical user profile
 
 
-Trust Score	System Action
+### Trust Score	System  Action
 
-80–100	Normal operation
-50–79	Monitored
-Below 50	Automatic lockout
+80–100. 	 Normal operation
+50–79	         Monitored
+Below 50	 Automatic lockout
 
 
 
 ---
 
-Roles
+### Roles
 
 Security Administrator
 
@@ -130,12 +130,12 @@ Threshold and policy configuration
 Incident and audit review
 
 
-Standard User
+### Standard User
 
 Normal, authorized behavior baseline
 
 
-Anomalous User
+### Anomalous User
 
 Simulated insider threat behavior
 
@@ -143,7 +143,7 @@ Simulated insider threat behavior
 
 ---
 
-DPDP Act 2026 Compliance
+### DPDP Act 2026 Compliance
 
 SKÖLL directly supports DPDP requirements by:
 
@@ -161,7 +161,7 @@ All events are logged for regulatory verification.
 
 ---
 
-Repository Structure
+### Repository Structure
 
 /src        → AI models and detection logic  
 /data       → Simulated employee activity logs  
@@ -171,7 +171,7 @@ Repository Structure
 
 ---
 
-Technology Stack
+### Technology Stack
 
 Python
 
@@ -187,7 +187,7 @@ Trae (Pro – Hackathon Access)
 
 ---
 
-Hackathon Demonstration Flow
+### Hackathon Demonstration Flow
 
 1. Train baseline user behavior
 
@@ -208,7 +208,7 @@ Hackathon Demonstration Flow
 
 ---
 
-Impact
+### Impact
 
 Prevents insider data breaches before execution
 
@@ -222,7 +222,7 @@ Scales across enterprise and government systems
 
 ---
 
-Conclusion
+### Conclusion
 
 SKÖLL transforms insider threat detection from reactive to predictive by identifying behavioral intent.
 It delivers early warning, automated protection, and legal compliance in a single intelligent system.
@@ -230,7 +230,7 @@ It delivers early warning, automated protection, and legal compliance in a singl
 
 ---
 
-About
+### About
 
 SKÖLL is an AI sentinel that hunts insider threats through behavioral intelligence.
 

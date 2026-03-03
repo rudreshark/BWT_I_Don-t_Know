@@ -1,5 +1,4 @@
-
-🐺 SKÖLL
+### 🐺 SKÖLL
 
 AI-Based Insider Threat Detection Using Behavioral Drift
 
@@ -11,110 +10,175 @@ AI-Based Insider Threat Detection Using Behavioral Drift
 SKÖLL is an AI-powered insider threat detection system designed to identify malicious intent before data exfiltration occurs.
 It continuously monitors user behavior, detects behavioral drift, and triggers automated security responses in real time.
 
-The system is built for high-security environments and aligns with the Digital Personal Data Protection (DPDP) Act 2026.
+The system is designed for high-security environments and aligns with the Digital Personal Data Protection (DPDP) Act 2026.
 
 
 ---
 
-### Problem
+### Problem Statement
 
-Insider threats are:
-
-Trusted by default
-
-Slow and subtle
-
-Difficult to detect using rule-based systems
-
-
-Traditional security tools react after data loss occurs.
-Under the DPDP Act 2026, delayed detection leads to legal, financial, and reputational damage.
+Detecting stealthy “low-and-slow” insider threats that bypass traditional security mechanisms through subtle, long-term behavioral drift.
 
 
 ---
 
-### Solution
+### The Issue
 
-SKÖLL introduces predictive insider threat detection by:
+Traditional security systems fail to detect insider threats that:
 
-Learning normal user behavior using AI
+Operate gradually over long periods
 
-Continuously measuring behavioral deviations
+Appear legitimate at each individual step
 
-Automatically stopping high-risk sessions
+Avoid triggering rule-based alerts
 
-
-This enables organizations to detect intent, not just violations.
 
 
 ---
 
-### Core Innovation
+### The Risk
 
-Behavioral Drift Detection Engine
+By 2026, organizations may face ₹250 Crore penalties under the DPDP Act if they fail to:
 
-User activity is modeled using LSTM neural networks
+Detect internal data misuse
 
-Live actions are compared with historical baselines
+Prevent insider-driven data leaks
 
-KL-Divergence measures statistical deviation
+Maintain proper audit trails
 
-Drift severity is converted into a Trust Score
-
-
-This approach detects low-and-slow insider attacks that evade traditional security systems.
 
 
 ---
 
-### System Architecture
+### The Gap
 
-User Activity Logs
-        ↓
-Behavioral Modeling (LSTM)
-        ↓
-Drift Analysis (KL-Divergence)
-        ↓
-Trust Score Engine
-        ↓
-Automated Kill-Switch & Audit Logs
+Existing security tools are too rigid:
+
+They cannot differentiate between legitimate behavior changes (role change, promotion)
+
+And malicious insider actions (data theft, source code exfiltration)
+
 
 
 ---
 
-### Automated Kill-Switch
+### Proposed Solution
 
-When behavioral drift exceeds a defined risk threshold:
+SKÖLL – Behavioral Drift–Based Insider Threat Detection
 
-User session is immediately locked
-
-Permissions are revoked
-
-Incident is logged for compliance review
-
-
-⏱️ Zero manual delay. Zero data exposure.
+SKÖLL is an AI-powered monitoring shield, built using Trae, that detects insider threats by analyzing behavioral drift over time instead of relying on static rules.
 
 
 ---
 
-### Trust Score
+### Core Concept
 
-Each session receives a Trust Score (0–100) based on:
+Continuous monitoring of developer activity
 
-Behavioral consistency
+Long-term behavioral baseline learning
 
-Drift intensity
+Detection of subtle deviations using statistical drift analysis
 
-Historical user profile
+Automated action before data loss occurs
 
 
-### Trust Score	System  Action
 
-80–100. 	 Normal operation
-50–79	         Monitored
-Below 50	 Automatic lockout
+---
 
+### Methodology
+
+Component	     Description
+
+Baseline Window	     90-day historical user behavior
+Observation Window	Current 7-day activity
+Drift Measurement	KL-Divergence
+Learning Model	    LSTM Neural Networks
+Risk Output	    Trust Score (0–100)
+
+
+
+---
+
+### System Architecture (Logical Flow)
+
+User / Developer Activity Logs
+            ↓
+LSTM Behavioral Modeling
+            ↓
+KL-Divergence Drift Analysis
+            ↓
+Real-Time Trust Score Engine
+            ↓
+Automated Kill-Switch
+            ↓
+Audit Logs & DPDP Compliance Reports
+
+
+---
+
+### Key Features
+
+🔍 LSTM Behavioral Profiling
+
+Learns the unique behavioral fingerprint of each user
+
+Adapts naturally to gradual role or workload changes
+
+
+### 📊 Real-Time Trust Score
+
+Trust Score ranges from 0–100
+
+Displayed live on the admin dashboard
+
+
+### 🚨 Automated Kill-Switch
+
+Instantly revokes Git / SSH / system permissions
+
+Triggered when high-risk behavioral drift is detected
+
+
+### 📑 DPDP Audit Logs
+
+One-click compliance reporting
+
+Designed for regulatory verification
+
+
+
+---
+
+### Trust Score Interpretation
+
+Trust Score Range	System Action
+
+80–100	        Secure – Normal Operation
+50–79	        Warning – Under Monitoring
+Below 50	Critical – Access Revoked
+
+
+
+---
+
+### User Interfaces (Mocked)
+
+IDE Sidebar
+
+Displays live Trust Score (example: 85% Secure)
+
+
+### Drift Visualization
+
+Green Line → Baseline behavior
+
+Red Line → Current drift trend
+
+
+### Lock Screen Overlay
+
+Access Denied  
+Unusual Behavioral Drift Detected
 
 
 ---
@@ -123,11 +187,11 @@ Below 50	 Automatic lockout
 
 Security Administrator
 
-Real-time dashboard monitoring
+Monitor Trust Scores
 
-Threshold and policy configuration
+Configure drift thresholds
 
-Incident and audit review
+Review incidents and audit logs
 
 
 ### Standard User
@@ -139,24 +203,6 @@ Normal, authorized behavior baseline
 
 Simulated insider threat behavior
 
-
-
----
-
-### DPDP Act 2026 Compliance
-
-SKÖLL directly supports DPDP requirements by:
-
-Continuous internal access monitoring
-
-Rapid automated response
-
-Incident traceability
-
-Audit-ready compliance reports
-
-
-All events are logged for regulatory verification.
 
 
 ---
@@ -179,9 +225,9 @@ LSTM Neural Networks
 
 KL-Divergence
 
-AI-based Behavioral Analytics
+Behavioral Analytics
 
-Trae (Pro – Hackathon Access)
+Trae Platform
 
 
 
@@ -189,19 +235,22 @@ Trae (Pro – Hackathon Access)
 
 ### Hackathon Demonstration Flow
 
-1. Train baseline user behavior
+1. Train baseline behavior using 90-day simulated data
 
 
-2. Inject anomalous activity
+2. Introduce anomalous activity
 
 
-3. Observe behavioral drift increase
+3. Observe gradual behavioral drift
 
 
-4. Trigger automated kill-switch
+4. Trust Score drops below threshold
 
 
-5. Display generated compliance report
+5. Automated access revocation
+
+
+6. Generate DPDP audit report
 
 
 
@@ -210,11 +259,11 @@ Trae (Pro – Hackathon Access)
 
 ### Impact
 
-Prevents insider data breaches before execution
+Detects insider threats before execution
 
-Reduces DPDP compliance risk
+Prevents regulatory penalties
 
-Minimizes false positives through adaptive learning
+Reduces false positives
 
 Scales across enterprise and government systems
 
@@ -224,15 +273,15 @@ Scales across enterprise and government systems
 
 ### Conclusion
 
-SKÖLL transforms insider threat detection from reactive to predictive by identifying behavioral intent.
-It delivers early warning, automated protection, and legal compliance in a single intelligent system.
+SKÖLL transforms insider threat detection from reactive to predictive by identifying behavioral intent, not just violations.
+It unifies AI, automation, and compliance into a single intelligent security layer.
 
 
 ---
 
 ### About
 
-SKÖLL is an AI sentinel that hunts insider threats through behavioral intelligence.
+SKÖLL — An AI sentinel guarding organizations against insider threats through behavioral intelligence.
 
 🐺🛡️
 

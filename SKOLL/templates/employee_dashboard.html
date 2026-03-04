@@ -1,0 +1,37 @@
+
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h2>Employee Menu</h2>
+            <ul>
+                <li><a href="#">Workstation</a></li>
+                <li><a href="#">Security Profile</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <button class="sidebar-toggle">&#9776;</button>
+            <h1>Employee Dashboard</h1>
+
+            <div id="workstation">
+                <h2>Workstation</h2>
+                <form method="POST" action="{{ url_for('request_edit') }}">
+                    <input type="hidden" name="location" id="location">
+                    <button type="submit" class="btn">Request Edit Token</button>
+                </form>
+            </div>
+    <script>
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
+                });
+            }
+        };
+    </script>
+
+        </div>
+    </div>
+{% endblock %}

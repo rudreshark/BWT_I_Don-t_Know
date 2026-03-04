@@ -1,0 +1,219 @@
+
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h2>Admin Menu</h2>
+            <ul>
+                <li><a href="#">User Approvals</a></li>
+                <li><a href="#">Project Requests</a></li>
+                <li><a href="#">Suspicious Activity</a></li>
+                <li><a href="#">Drift Analysis</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+
+            <div id="suspicious-activity">
+                <h2>Suspicious Activity</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Session Count</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in suspicious_users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.session_count }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('block_user', user_id=user.id) }}" style="display: inline-block;">
+                                        <button type="submit" class="btn">Block</button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('reset_user', user_id=user.id) }}" style="display: inline-block;">
+                                        <button type="submit" class="btn">Reset</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+    
+            <div id="drift-analysis">
+                <h2>Drift Analysis</h2>
+                <canvas id="drift-chart"></canvas>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Drift Score</th>
+                            <th>Trust Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.drift_score }}</td>
+                                <td>{{ user.trust_score }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+    
+            
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const driftChartCtx = document.getElementById('drift-chart').getContext('2d');
+        const driftChart = new Chart(driftChartCtx, {
+            type: 'line',
+            data: {
+                labels: [], // Timestamps
+                datasets: [{
+                    label: 'Drift Score Trend',
+                    data: [], // Drift scores
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function updateDriftData() {
+            fetch('/api/drift-data')
+                .then(response => response.json())
+                .then(data => {
+                    driftChart.data.labels = data.labels;
+                    driftChart.data.datasets[0].data = data.drift_scores;
+                    driftChart.update();
+
+                    const tableBody = document.querySelector('#drift-analysis tbody');
+                    tableBody.innerHTML = '';
+                    for (let i = 0; i < data.labels.length; i++) {
+                        const row = `<tr>
+                            <td>${data.labels[i]}</td>
+                            <td>${data.drift_scores[i]}</td>
+                            <td>${data.trust_scores[i]}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    }
+                });
+        }
+
+
+        function updatePendingUsers() {
+            fetch('/api/pending-users')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#user-approvals tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(user => {
+                        const row = `<tr>
+                            <td>${user.username}</td>
+                            <td>
+                                <form method="POST" action="/approve_user/${user.id}">
+                                    <button type="submit" class="btn">Approve</button>
+                                </form>
+                            </td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                });
+        }
+
+        function updateSuspiciousUsers() {
+            fetch('/api/suspicious-users')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#suspicious-activity tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(user => {
+                        const row = `<tr>
+                            <td>${user.username}</td>
+                            <td>${user.session_count}</td>
+                            <td>
+                                <form method="POST" action="/block_user/${user.id}" style="display: inline-block;">
+                                    <button type="submit" class="btn">Block</button>
+                                </form>
+                                <form method="POST" action="/reset_user/${user.id}" style="display: inline-block;">
+                                    <button type="submit" class="btn">Reset</button>
+                                </form>
+                            </td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                });
+        }
+
+        function updateEditRequests() {
+            fetch('/api/edit-requests')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#project-requests tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(request => {
+                        const row = `<tr>
+                            <td>${request.user_id}</td>
+                            <td>${request.request_time}</td>
+                            <td>${request.location}</td>
+                            <td>
+                                <form method="POST" action="/approve_edit_request/${request.id}">
+                                    <button type="submit" class="btn">Approve</button>
+                                </form>
+                            </td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                });
+        }
+
+        setInterval(updatePendingUsers, 3000);
+        setInterval(updateSuspiciousUsers, 3000);
+        setInterval(updateEditRequests, 3000);
+        updatePendingUsers(); // Initial call
+        updateSuspiciousUsers(); // Initial call
+        updateEditRequests(); // Initial call
+    </script>
+
+
+        <div class="main-content">
+            <button class="sidebar-toggle">&#9776;</button>
+            <h1>Admin Dashboard</h1>
+
+            <div id="user-approvals">
+                <h2>User Approvals</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in pending_users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}">
+                                        <button type="submit" class="btn">Approve</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

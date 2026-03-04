@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h2>Admin Menu</h2>
+            <ul>
+                <li><a href="{{ url_for('admin_dashboard') }}">View Users Activity</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Track Users</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Permissions</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Approved</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Rejected</a></li>
+                <li><a href="{{ url_for('drift_page') }}">Drift Analysis</a></li>
+                <li><a href="{{ url_for('drift_page') }}">Trust Scores</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Refresh</a></li>
+                <li><a href="#">Live Inspect</a></li>
+                <li><a href="#">AI Verdict Feed</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <button class="sidebar-toggle">&#9776;</button>
+            <h1>Admin Dashboard</h1>
+
+            <div id="user-approvals">
+                <h2>User Approvals</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in pending_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}">
+                                    <button type="submit" class="btn">Approve</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="live-inspect">
+                <h2>Live Inspect</h2>
+                <div>
+                    <select id="inspect-user">
+                        {% for uid in online_agents %}
+                            <option value="{{ uid }}">{{ uid }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn" id="start-inspect">Inspect</button>
+                </div>
+                <div id="inspect-modal" style="display:none;">
+                    <img id="inspect-image" style="max-width: 100%; border: 1px solid #333;" />
+                </div>
+            </div>
+
+            <div id="ai-verdict">
+                <h2>AI Verdict Feed</h2>
+                <ul id="verdict-feed"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+
+        document.getElementById('start-inspect').addEventListener('click', () => {
+            document.getElementById('inspect-modal').style.display = 'block';
+        });
+
+        socket.on('inspect_stream', (data) => {
+            const target = document.getElementById('inspect-user').value;
+            if (String(data.user_id) === String(target)) {
+                document.getElementById('inspect-image').src = 'data:image/png;base64,' + data.image_base64;
+            }
+        });
+
+        socket.on('ai_verdict', (data) => {
+            const li = document.createElement('li');
+            li.textContent = `Score: ${data.score.toFixed(3)} | Verdict: ${data.verdict} | Request: ${data.edit_request_id || '-'}`;
+            document.getElementById('verdict-feed').prepend(li);
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,12 @@
+
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="portal-container">
+        <h1>Welcome to SKÖLL</h1>
+        <div class="portal-buttons">
+            <a href="{{ url_for('login', role='admin') }}" class="btn">Admin Portal</a>
+            <a href="{{ url_for('login', role='employee') }}" class="btn">Employee Portal</a>
+        </div>
+    </div>
+{% endblock %}

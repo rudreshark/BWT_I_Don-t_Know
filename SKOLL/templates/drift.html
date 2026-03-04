@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h2>Admin Menu</h2>
+            <ul>
+                <li><a href="{{ url_for('admin_dashboard') }}">View Users Activity</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Track Users</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Permissions</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Approved</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Rejected</a></li>
+                <li><a href="{{ url_for('drift_page') }}">Drift Analysis</a></li>
+                <li><a href="{{ url_for('drift_page') }}">Trust Scores</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Refresh</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <button class="sidebar-toggle">&#9776;</button>
+            <h1>Drift Analysis</h1>
+
+            <canvas id="drift-chart"></canvas>
+
+            <table class="dark-table">
+                <thead>
+                <tr>
+                    <th>timestamp</th>
+                    <th>user_id</th>
+                    <th>drift_score</th>
+                    <th>trust_score</th>
+                    <th>action_taken</th>
+                </tr>
+                </thead>
+                <tbody id="drift-feed-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('drift-chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Drift score trend',
+                    data: [],
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function refreshTrend() {
+            fetch('/api/drift-trend')
+                .then(r => r.json())
+                .then(d => {
+                    chart.data.labels = d.labels;
+                    chart.data.datasets[0].data = d.values;
+                    chart.update();
+                });
+        }
+
+        function refreshFeed() {
+            fetch('/api/drift-feed')
+                .then(r => r.json())
+                .then(rows => {
+                    const body = document.getElementById('drift-feed-body');
+                    body.innerHTML = '';
+                    rows.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.ts}</td>
+                            <td>${row.user_id}</td>
+                            <td>${row.drift_score.toFixed(2)}</td>
+                            <td>${row.trust_score.toFixed(2)}</td>
+                            <td>${row.action_taken || '-'}</td>
+                        `;
+                        body.appendChild(tr);
+                    });
+                });
+        }
+
+        setInterval(() => { refreshTrend(); refreshFeed(); }, 3000);
+        refreshTrend(); refreshFeed();
+    </script>
+{% endblock %}
